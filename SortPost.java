@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.Arrays;
 import java.util.PriorityQueue;
+import java.util.spi.ResourceBundleControlProvider;
 
 public class SortPost {
 	String filename_in;
@@ -23,7 +24,7 @@ public class SortPost {
 		this.M = M;
 		this.B = B;
 
-		this.c = c;
+		this.c = c; // which colomn to sort on
 		this.sep = sep;
 	}
 
@@ -37,21 +38,14 @@ public class SortPost {
 		String[] chunk = new String[M];
 		String line;
 		while ((line = in.readLine()) != null) {
-			String[] token = line.split("\t");
-			String rebuild = token[1] + " " + token[2] + " " + token[3] + " " + token[0];
-			chunk[cnt] = rebuild;
+			chunk[cnt] = line;
 			cnt++;
 			if (cnt == M) { // Buffer is full, output file
-				BufferedWriter out = new BufferedWriter(new FileWriter("tmpfile" + numChunks));
-				Arrays.sort(chunk);
-				for (int i = 0; i < M; i++) {
-					out.write(chunk[i]);
-					out.newLine();
-					out.flush();
-				}
-				cnt = 0;
+				String fileName = tmpfileprefix + numChunks;
+				sortAndSaveChunk(chunk, fileName);
 				numChunks++;
 				chunk = new String[M];
+				cnt = 0;
 			}
 		}
 
@@ -102,8 +96,7 @@ public class SortPost {
 
 			if (minh.head != null) {
 				whichList = minh.i;
-				String[] tokenOut = minh.head.split(" ");
-				out.write(tokenOut[3] + "\t" + tokenOut[0] + "\t" + tokenOut[1] + "\t" + tokenOut[2]);
+				out.write(minh.head);
 				out.newLine();
 				out.flush();
 				heads.add(new HeadIndexPair(readers[whichList].readLine(), whichList));
@@ -164,9 +157,9 @@ public class SortPost {
 		//depending on your machine (be patient).
 		SortPost mysort = new SortPost("taxpayers_3M.txt", //input file
 				"taxpayers_3M_sorted.txt", //output sorted file
-				300_000, //M, size of chunk to sort in number of lines, also the size of a sorted sublist
+				300, //M, size of chunk to sort in number of lines, also the size of a sorted sublist
 				8192, //B, size of buffer in characters (1 char = 2 bytes), if B==8192 char, it is 16K bytes
-				0, //c, sort column
+				1, //c, sort column
 				"\t" //sep, column separator
 		);
 
