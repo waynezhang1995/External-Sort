@@ -157,7 +157,7 @@ public class SortPost {
 		//depending on your machine (be patient).
 		SortPost mysort = new SortPost("taxpayers_3M.txt", //input file
 				"taxpayers_3M_sorted.txt", //output sorted file
-				300, //M, size of chunk to sort in number of lines, also the size of a sorted sublist
+				300_000, //M, size of chunk to sort in number of lines, also the size of a sorted sublist
 				8192, //B, size of buffer in characters (1 char = 2 bytes), if B==8192 char, it is 16K bytes
 				1, //c, sort column
 				"\t" //sep, column separator
