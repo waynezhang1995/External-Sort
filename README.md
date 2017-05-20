@@ -1,6 +1,6 @@
 # External-Sort
 
-## Java Implementation of External-Sort
+Java implement of 2PMMS that sorts a file of 3 million records.
 
 ## Compile
 
